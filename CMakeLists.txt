@@ -22,9 +22,11 @@ add_subdirectory("${GLAD_SOURCES_DIR}/cmake" glad_cmake)
 glad_add_library(glad REPRODUCIBLE MX API gl:core=4.3)
 
 
+add_subdirectory(libsrc)
+
 # build executable
 add_executable(firstWindow src/firstWindow.cpp)
-target_link_libraries(firstWindow glad glfw)
+target_link_libraries(firstWindow glfw gmWindow glad)
 
 add_executable(basicFinal src/basicFinal.cpp)
 target_link_libraries(basicFinal glad glfw)
@@ -32,4 +34,8 @@ target_link_libraries(basicFinal glad glfw)
 add_executable(multiwin_mx src/multiwin_mx.cpp)
 target_link_libraries(multiwin_mx glad glfw)
 
+add_executable(sumab src/testLink.cpp)
+target_link_libraries(sumab testLink)
+
+# subdirectory
 add_subdirectory(leetcode)

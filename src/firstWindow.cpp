@@ -4,6 +4,12 @@
 #include <iostream>
 
 #include <core/gmWindow.h>
+// Function prototypes
+GLFWwindow* create_window(const char *name, int major, int minor);
+GladGLContext* create_context(GLFWwindow *window);
+void free_context(GladGLContext *context);
+void draw(GLFWwindow *window, GladGLContext *context, float r, float g, float b);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 void processInput(GLFWwindow *window);
 
@@ -13,7 +19,7 @@ int main()
 {
     std::cout << "Hello Opengl" << std::endl;
 
-    size_t windowNum = 20;
+    size_t windowNum = 5;
     gmWindow::gmWindow window[windowNum];
     bool shallClose = false;
 
