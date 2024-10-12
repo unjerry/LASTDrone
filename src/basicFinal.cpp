@@ -57,7 +57,6 @@ void processInput(GLFWwindow *window)
 
 void keyback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-    std::cout << key << " " << scancode << " " << action << " " << mods << std::endl;
     if (action == 1)
     {
         glfwSetWindowShouldClose(window, true);
