@@ -1,1 +1,1 @@
-const char * logl_root = "C:/workspace/git-remote/sayon_2";
+const char * logl_root = "E:/workspace-git/remotegithub/others/sayon_2";
