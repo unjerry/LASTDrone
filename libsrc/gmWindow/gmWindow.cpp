@@ -10,6 +10,21 @@ namespace gmWindow
     {
         return gl;
     }
+    void gmWindow::run()
+    {
+        glfwMakeContextCurrent(window);
+        // input
+        // -----
+        processInput(window);
+        // render
+        // ------
+        gl->ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        gl->Clear(GL_COLOR_BUFFER_BIT);
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
     gmWindow::gmWindow(const gmWindowSpecification &spec) : mSpecification(spec)
     {
         // glfw: initialize and configure
@@ -25,7 +40,7 @@ namespace gmWindow
 
         // glfw window creation
         // --------------------
-        window = glfwCreateWindow(mSpecification.SCR_WIDTH, mSpecification.SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        window = glfwCreateWindow(mSpecification.SCR_WIDTH, mSpecification.SCR_HEIGHT, mSpecification.WINDOW_NAME, NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;

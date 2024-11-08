@@ -1,4 +1,4 @@
-#include<core/gmWindow.h>
+#include <core/gmWindow.h>
 
 namespace gmWindow
 {
@@ -19,5 +19,12 @@ namespace gmWindow
         std::cout << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
         gl->Viewport(0, 0, width, height);
         free(gl);
+    }
+    // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+    // ---------------------------------------------------------------------------------------------------------
+    void processInput(GLFWwindow *window)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
     }
 }

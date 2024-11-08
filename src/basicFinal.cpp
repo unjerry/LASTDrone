@@ -1,12 +1,17 @@
+// use glad and glfw3
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
+
+// use stb to load images
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+// glm
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// shader classes
 #include <learnopengl/shader_m.h>
 #include <learnopengl/filesystem.h>
 
@@ -38,13 +43,13 @@ float deltaTime = 0.0f; // time between current frame and last frame
 float lastFrame = 0.0f;
 
 int main()
-    {
+{
     // glfw: initialize and configure
     // ------------------------------
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -53,13 +58,13 @@ int main()
     // glfw window creation
     // --------------------
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-        if (window == NULL)
-        {
-            std::cout << "Failed to create GLFW window" << std::endl;
-            glfwTerminate();
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
         return -1;
-        }
-        glfwMakeContextCurrent(window);
+    }
+    glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -68,13 +73,13 @@ int main()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     GladGLContext *gl = (GladGLContext *)calloc(1, sizeof(GladGLContext));
-        if (!gl)
-        {
-            throw std::invalid_argument("Failed to create context");
-        }
+    if (!gl)
+    {
+        throw std::invalid_argument("Failed to create context");
+    }
 
     int version = gladLoadGLContext(gl, glfwGetProcAddress);
-        std::cout << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
+    std::cout << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -305,7 +310,7 @@ void processInput(GLFWwindow *window)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
+}
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
