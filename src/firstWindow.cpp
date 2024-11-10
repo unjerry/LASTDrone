@@ -17,7 +17,7 @@ int main()
 {
     std::cout << "Hello Opengl" << std::endl;
 
-    size_t windowNum = 5;
+    const size_t windowNum = 5;
     gmWindow::gmWindow window[windowNum];
     bool shallClose = false;
 
