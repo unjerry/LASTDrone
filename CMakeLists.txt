@@ -39,6 +39,7 @@ target_link_libraries(sumab testLink)
 
 # subdirectory
 add_subdirectory(leetcode)
+add_subdirectory(openglBreakout)
 if(MSVC)
     aux_source_directory(${PROJECT_SOURCE_DIR}/src/testsrc testsrcdir)
     add_executable(testsrc ${testsrcdir})
