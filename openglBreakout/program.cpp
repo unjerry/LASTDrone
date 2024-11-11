@@ -13,6 +13,7 @@
 #include "resource_manager.h"
 
 #include <iostream>
+#include <core/gmWindow.h>
 
 GladGLContext *gl;
 
@@ -29,29 +30,12 @@ Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 int main(int argc, char *argv[])
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-    glfwWindowHint(GLFW_RESIZABLE, false);
-
-    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout", nullptr, nullptr);
-    glfwMakeContextCurrent(window);
-
-    gl = (GladGLContext *)calloc(1, sizeof(GladGLContext));
-    if (!gl)
-    {
-        throw std::invalid_argument("Failed to create context");
-    }
-
-    int version = gladLoadGLContext(gl, glfwGetProcAddress);
-    std::cout << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version) << std::endl;
+    gmWindow::gmWindow WINDW;
+    GLFWwindow *window = WINDW.getWindow();
+    gl = WINDW.getGl();
 
     glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // OpenGL configuration
     // --------------------
@@ -99,7 +83,6 @@ int main(int argc, char *argv[])
     ResourceManager::Clear();
 
     glfwTerminate();
-    free(gl);
     return 0;
 }
 
