@@ -29,10 +29,12 @@ void Game::Init()
     // load shaders
     ResourceManager::LoadShader(FileSystem::getPath("resources/shaders/sprite.vs").c_str(), FileSystem::getPath("resources/shaders/sprite.fs").c_str(), nullptr, "sprite");
     // configure shaders
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(this->Width) / static_cast<float>(this->Height), 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), static_cast<float>(this->Width) / static_cast<float>(this->Height), 0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(glm::vec3(0.f, 0.f, 1.732f), glm::vec3(0.f, 0.f, 0.0f), glm::vec3(0.f, 1.0f, 0.0f));
     // glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+    ResourceManager::GetShader("sprite").SetMatrix4("view", view);
     // set render-specific controls
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // load textures
@@ -49,5 +51,5 @@ void Game::ProcessInput(float dt)
 
 void Game::Render()
 {
-    Renderer->DrawSprite(ResourceManager::GetTexture("face"), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    Renderer->DrawSprite(ResourceManager::GetTexture("face"), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(.5f, .5f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
