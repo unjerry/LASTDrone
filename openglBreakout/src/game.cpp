@@ -60,7 +60,7 @@ void Game::Init()
     this->Levels.push_back(four);
     this->Level = 0;
     // configure game objects
-    glm::vec3 playerPos = glm::vec3(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y, 0);
+    glm::vec3 playerPos = glm::vec3(1, 1.85, 0);
     Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
 }
 
@@ -77,12 +77,12 @@ void Game::ProcessInput(float dt)
         if (this->Keys[GLFW_KEY_A])
         {
             if (Player->Position.x >= 0.0f)
-                Player->Position.x -= velocity;
+                Player->Position.x += velocity;
         }
         if (this->Keys[GLFW_KEY_D])
         {
             if (Player->Position.x <= this->Width - Player->Size.x)
-                Player->Position.x += velocity;
+                Player->Position.x -= velocity;
         }
     }
 }
