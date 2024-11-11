@@ -37,6 +37,7 @@ public:
     GameState State;
     bool Keys[1024];
     unsigned int Width, Height;
+    float aspect_ratio;
     std::vector<GameLevel> Levels;
     unsigned int Level;
     // constructor/destructor
@@ -48,6 +49,7 @@ public:
     void ProcessInput(float dt);
     void Update(float dt);
     void Render();
+    void changeSize(unsigned int, unsigned int);
 };
 
 #endif

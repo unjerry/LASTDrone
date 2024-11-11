@@ -35,15 +35,14 @@ int main(int argc, char *argv[])
     gl = WINDW.getGl();
 
     glfwSetKeyCallback(window, key_callback);
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     // OpenGL configuration
     // --------------------
     gl->Viewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     gl->Enable(GL_BLEND);
     gl->BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // initialize game
+    // // initialize game
     // ---------------
     Breakout.Init();
 
@@ -71,8 +70,8 @@ int main(int argc, char *argv[])
 
         // render
         // ------
-        gl->ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        gl->Clear(GL_COLOR_BUFFER_BIT);
+        gl->ClearColor(0.3f, 0.2f, 0.4f, 1.0f);
+        gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Breakout.Render();
 
         glfwSwapBuffers(window);
@@ -105,4 +104,5 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     gl->Viewport(0, 0, width, height);
+    Breakout.changeSize(width, height);
 }
