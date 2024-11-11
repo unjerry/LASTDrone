@@ -9,10 +9,9 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "game.h"
-#include "resource_manager.h"
+#include <game.h>
+#include <resource_manager.h>
 
-#include <iostream>
 #include <core/gmWindow.h>
 
 GladGLContext *gl;
@@ -30,7 +29,8 @@ Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 int main(int argc, char *argv[])
 {
-    gmWindow::gmWindow WINDW;
+    gmWindow::gmWindowSpecification spec(SCREEN_WIDTH, SCREEN_HEIGHT, "BreakOut");
+    gmWindow::gmWindow WINDW(spec);
     GLFWwindow *window = WINDW.getWindow();
     gl = WINDW.getGl();
 

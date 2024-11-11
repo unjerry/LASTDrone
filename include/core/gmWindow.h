@@ -21,6 +21,8 @@ namespace gmWindow
         const unsigned int SCR_WIDTH = 800;
         const unsigned int SCR_HEIGHT = 600;
         const char *WINDOW_NAME = "LearnOpenGL";
+        gmWindowSpecification() {}
+        gmWindowSpecification(const unsigned int WIDTH, const unsigned int HEIGHT, const char *NAME) : SCR_WIDTH(WIDTH), SCR_HEIGHT(HEIGHT), WINDOW_NAME(NAME) {}
     };
 
     class gmWindow
