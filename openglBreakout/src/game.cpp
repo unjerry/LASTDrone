@@ -11,12 +11,14 @@
 #include "sprite_renderer.h"
 #include "game_object.h"
 #include <learnopengl/filesystem.h>
+#include <ball_object.h>
 
 extern GladGLContext *gl;
 
 // Game-related State data
 SpriteRenderer *Renderer;
 GameObject *Player;
+BallObject *Ball;
 
 glm::vec2 cameraPos(0.0f);
 
@@ -64,12 +66,17 @@ void Game::Init()
     // configure game objects
     glm::vec3 playerPos = glm::vec3(0.0, -0.85, 0);
     Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
+    glm::vec3 ballPos = playerPos + glm::vec3(PLAYER_SIZE.x / 2.0f - BALL_RADIUS,
+                                              +PLAYER_SIZE.y, 0.0f);
+    Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY,
+                          ResourceManager::GetTexture("face"));
 }
 
 void Game::Update(float dt)
 {
     glm::mat4 view = glm::lookAt(glm::vec3(cameraPos, 1.732f), glm::vec3(cameraPos, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     ResourceManager::GetShader("sprite").SetMatrix4("view", view);
+    Ball->Move(dt, 1.0f);
 }
 
 void Game::ProcessInput(float dt)
@@ -81,13 +88,23 @@ void Game::ProcessInput(float dt)
         if (this->Keys[GLFW_KEY_A])
         {
             if (Player->Position.x >= -1.0f)
+            {
                 Player->Position.x -= velocity;
+                if (Ball->Stuck)
+                    Ball->Position.x -= velocity;
+            }
         }
         if (this->Keys[GLFW_KEY_D])
         {
             if (Player->Position.x <= 1.0f - Player->Size.x)
+            {
                 Player->Position.x += velocity;
+                if (Ball->Stuck)
+                    Ball->Position.x += velocity;
+            }
         }
+        if (this->Keys[GLFW_KEY_SPACE])
+            Ball->Stuck = false;
 
         if (this->Keys[GLFW_KEY_LEFT])
         {
@@ -115,11 +132,12 @@ void Game::Render()
         gl->Disable(GL_DEPTH_TEST);
         // draw background
         Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio, -1.0f, 0.0f) + glm::vec3(cameraPos, 0.0f), glm::vec2(aspect_ratio * 2.0f, 2.0f), 0.0f);
-        // draw level
         gl->Enable(GL_DEPTH_TEST);
-        this->Levels[this->Level].Draw(*Renderer);
         // draw player
+        Ball->Draw(*Renderer);
         Player->Draw(*Renderer);
+        // draw level
+        this->Levels[this->Level].Draw(*Renderer);
     }
 }
 void Game::changeSize(unsigned int width, unsigned int height)

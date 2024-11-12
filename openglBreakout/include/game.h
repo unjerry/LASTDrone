@@ -27,6 +27,12 @@ const glm::vec2 PLAYER_SIZE(0.73f, 0.125f);
 // Initial velocity of the player paddle
 const float PLAYER_VELOCITY(1.0f);
 
+// Initial velocity of the Ball
+const glm::vec2 INITIAL_BALL_VELOCITY(0.5f, 0.5f);
+// Radius of the ball object
+const float BALL_RADIUS = 0.125f;
+  
+
 // Game holds all game-related state and functionality.
 // Combines all game-related data into a single class for
 // easy access to each of the components and manageability.
