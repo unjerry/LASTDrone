@@ -77,6 +77,7 @@ void Game::Update(float dt)
     glm::mat4 view = glm::lookAt(glm::vec3(cameraPos, 1.732f), glm::vec3(cameraPos, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     ResourceManager::GetShader("sprite").SetMatrix4("view", view);
     Ball->Move(dt, 1.0f);
+    this->DoCollisions();
 }
 
 void Game::ProcessInput(float dt)
@@ -147,4 +148,30 @@ void Game::changeSize(unsigned int width, unsigned int height)
     aspect_ratio = static_cast<float>(Width) / static_cast<float>(Height);
     glm::mat4 projection = glm::perspective(glm::radians(60.0f), aspect_ratio, 0.1f, 100.0f);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+}
+bool CheckCollision(GameObject &one, GameObject &two) // AABB - AABB collision
+{
+    // collision x-axis?
+    bool collisionX = one.Position.x + one.Size.x >= two.Position.x &&
+                      two.Position.x + two.Size.x >= one.Position.x;
+    // collision y-axis?
+    bool collisionY = one.Position.y + one.Size.y >= two.Position.y &&
+                      two.Position.y + two.Size.y >= one.Position.y;
+    // collision only if on both axes
+    return collisionX && collisionY;
+}
+
+void Game::DoCollisions()
+{
+    for (GameObject &box : this->Levels[this->Level].Bricks)
+    {
+        if (!box.Destroyed)
+        {
+            if (CheckCollision(*Ball, box))
+            {
+                if (!box.IsSolid)
+                    box.Destroyed = true;
+            }
+        }
+    }
 }

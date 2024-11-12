@@ -31,7 +31,6 @@ const float PLAYER_VELOCITY(1.0f);
 const glm::vec2 INITIAL_BALL_VELOCITY(0.5f, 0.5f);
 // Radius of the ball object
 const float BALL_RADIUS = 0.125f;
-  
 
 // Game holds all game-related state and functionality.
 // Combines all game-related data into a single class for
@@ -56,6 +55,7 @@ public:
     void Update(float dt);
     void Render();
     void changeSize(unsigned int, unsigned int);
+    void DoCollisions();
 };
 
 #endif
