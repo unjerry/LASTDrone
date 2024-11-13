@@ -67,7 +67,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, float leve
             if (tileData[y][x] == 1) // solid
             {
                 glm::vec2 size(unit_width, unit_height);
-                for (size_t k = 0; k < 3; k++)
+                for (size_t k = 0; k < 1; k++)
                 {
                     glm::vec3 pos(aspect + unit_width * x, levelHeight - unit_height * (y + 1), -.05f * k);
                     GameObject obj(pos, size, ResourceManager::GetTexture("block_solid"), glm::vec3(0.8f, 0.8f, 0.7f));
@@ -88,7 +88,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, float leve
                     color = glm::vec3(1.0f, 0.5f, 0.0f);
 
                 glm::vec2 size(unit_width, unit_height);
-                for (size_t k = 0; k < 3; k++)
+                for (size_t k = 0; k < 1; k++)
                 {
                     glm::vec3 pos(aspect + unit_width * x, levelHeight - unit_height * (y + 1), -.05f * k);
                     this->Bricks.push_back(GameObject(pos, size, ResourceManager::GetTexture("block"), color));
