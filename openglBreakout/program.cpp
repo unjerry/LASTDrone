@@ -11,8 +11,11 @@
 
 #include <game.h>
 #include <resource_manager.h>
+#include <learnopengl/filesystem.h>
 
 #include <core/gmWindow.h>
+// #define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 GladGLContext *gl;
 
@@ -36,7 +39,10 @@ int main(int argc, char *argv[])
 
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+    GLFWimage images[1];
+    images[0].pixels = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
+    glfwSetWindowIcon(window, 1, images);
+    stbi_image_free(images[0].pixels);
     // OpenGL configuration
     // --------------------
     gl->Viewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
