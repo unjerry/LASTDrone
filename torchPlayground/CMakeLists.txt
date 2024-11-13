@@ -1,7 +1,19 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 project(example-app)
 
-set(CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/libtorch)
+include (FetchContent)
+set(FETCHCONTENT_QUIET off)
+get_filename_component(torch_base "./torch_base"
+                       REALPATH BASE_DIR "${PROJECT_SOURCE_DIR}")
+set(FETCHCONTENT_BASE_DIR ${torch_base})
+FetchContent_Declare(
+  TCC
+  URL https://download.pytorch.org/libtorch/cu124/libtorch-win-shared-with-deps-2.5.1%2Bcu124.zip
+)
+FetchContent_MakeAvailable(TCC)
+# set(SDL2_PATH ${sdl2_SOURCE_DIR})
+
+set(CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/torch_base/tcc-src)
 
 find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
