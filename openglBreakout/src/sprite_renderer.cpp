@@ -71,6 +71,7 @@ void SpriteRenderer::initRenderData()
     gl->VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(0 * sizeof(float)));
     gl->EnableVertexAttribArray(1);
     gl->VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+
     gl->BindBuffer(GL_ARRAY_BUFFER, 0);
     gl->BindVertexArray(0);
 }

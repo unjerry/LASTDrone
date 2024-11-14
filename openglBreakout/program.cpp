@@ -1,10 +1,5 @@
 /*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
+** This code is part of LASTDrone.
 ******************************************************************/
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -28,7 +23,7 @@ const unsigned int SCREEN_WIDTH = 800;
 // The height of the screen
 const unsigned int SCREEN_HEIGHT = 600;
 
-Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
+Game::Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +34,7 @@ int main(int argc, char *argv[])
 
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
     GLFWimage images[1];
     images[0].pixels = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
     glfwSetWindowIcon(window, 1, images);
@@ -76,8 +72,8 @@ int main(int argc, char *argv[])
 
         // render
         // ------
-        gl->ClearColor(0.3f, 0.2f, 0.4f, 1.0f);
-        gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        gl->ClearColor(0.1f, 0.2f, 0.4f, 1.0f);
+        gl->Clear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
         Breakout.Render();
 
         glfwSwapBuffers(window);
