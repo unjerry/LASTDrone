@@ -1,4 +1,6 @@
 #include <core/gmWindow.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 namespace gmWindow
 {
 
@@ -24,6 +26,17 @@ namespace gmWindow
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+    void gmWindow::set_framebuffer_size_callback(GLFWframebuffersizefun callback)
+    {
+        this->framebuffer_size_callback = callback;
+        glfwSetFramebufferSizeCallback(window, this->framebuffer_size_callback);
+    }
+    void gmWindow::set_window_icon(const char *filename)
+    {
+        window_icon.pixels = stbi_load(filename, &window_icon.width, &window_icon.height, 0, 4); // rgba channels
+        glfwSetWindowIcon(window, 1, &window_icon);
+        stbi_image_free(window_icon.pixels);
     }
     gmWindow::gmWindow(const gmWindowSpecification &spec) : mSpecification(spec)
     {
@@ -64,7 +77,7 @@ namespace gmWindow
         //     std::cout << "Failed to initialize GLAD" << std::endl;
         //     throw std::invalid_argument("Failed to initialize GLAD");
         // }
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+        glfwSetFramebufferSizeCallback(window, this->framebuffer_size_callback);
     }
 
     gmWindow::~gmWindow()

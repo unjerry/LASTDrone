@@ -20,6 +20,8 @@ namespace gmWindow
         /* data */
         const unsigned int SCR_WIDTH = 800;
         const unsigned int SCR_HEIGHT = 600;
+        const unsigned int GL_major = 3;
+        const unsigned int GL_minor = 3;
         const char *WINDOW_NAME = "LearnOpenGL";
         gmWindowSpecification() {}
         gmWindowSpecification(const unsigned int WIDTH, const unsigned int HEIGHT, const char *NAME) : SCR_WIDTH(WIDTH), SCR_HEIGHT(HEIGHT), WINDOW_NAME(NAME) {}
@@ -27,11 +29,14 @@ namespace gmWindow
 
     class gmWindow
     {
+    public:
     private:
         /* data */
         gmWindowSpecification mSpecification;
         GLFWwindow *window;
         GladGLContext *gl;
+        GLFWframebuffersizefun framebuffer_size_callback;
+        GLFWimage window_icon;
 
     public:
         /* methods */
@@ -40,6 +45,8 @@ namespace gmWindow
         GLFWwindow *getWindow();                                               // return GLFWwindow
         GladGLContext *getGl();                                                // return GladGLContext
         void run();                                                            // run engine
+        void set_framebuffer_size_callback(GLFWframebuffersizefun callback);
+        void set_window_icon(const char *);
     };
 
 } // namespace gmWindow

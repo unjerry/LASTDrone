@@ -12,7 +12,7 @@
 #include <sstream>
 #include <fstream>
 // use stb to load images
-#define STB_IMAGE_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 extern GladGLContext *gl;
 

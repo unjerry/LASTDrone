@@ -7,10 +7,11 @@
 #include <game.h>
 #include <resource_manager.h>
 #include <learnopengl/filesystem.h>
-
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include <core/gmWindow.h>
-// #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <iostream>
 
 GladGLContext *gl;
 
@@ -31,14 +32,14 @@ int main(int argc, char *argv[])
     gmWindow::gmWindow WINDW(spec);
     GLFWwindow *window = WINDW.getWindow();
     gl = WINDW.getGl();
-
     glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    WINDW.set_framebuffer_size_callback(framebuffer_size_callback);
+    WINDW.set_window_icon(FileSystem::getPath("resources/textures/awesomeface.png").c_str());
 
-    GLFWimage images[1];
-    images[0].pixels = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
-    glfwSetWindowIcon(window, 1, images);
-    stbi_image_free(images[0].pixels);
+    // GLFWimage images[1];
+    // images[0].pixels = stbi_load(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), &images[0].width, &images[0].height, 0, 4); // rgba channels
+    // glfwSetWindowIcon(window, 1, images);
+    // stbi_image_free(images[0].pixels);
     // OpenGL configuration
     // --------------------
     gl->Viewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -53,6 +54,18 @@ int main(int argc, char *argv[])
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
+    std::cout << "sldkfj" << std::endl;
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile("rhd", aiProcess_Triangulate | aiProcess_FlipUVs); // retrieve the directory path of the filepath
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+        // return 0;
+    }
+    // directory = path.substr(0, path.find_last_of('/'));
+    // process ASSIMP's root node recursively
+    // processNode(scene->mRootNode, scene);
+
     while (!glfwWindowShouldClose(window))
     {
         // calculate delta time
@@ -65,15 +78,13 @@ int main(int argc, char *argv[])
         // manage user input
         // -----------------
         Breakout.ProcessInput(deltaTime);
-
         // update game state
         // -----------------
         Breakout.Update(deltaTime);
-
         // render
         // ------
         gl->ClearColor(0.1f, 0.2f, 0.4f, 1.0f);
-        gl->Clear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+        gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         Breakout.Render();
 
         glfwSwapBuffers(window);

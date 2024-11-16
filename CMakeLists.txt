@@ -14,6 +14,9 @@ configure_file(${PROJECT_SOURCE_DIR}/include/learnopengl/root_directory.h.in ${P
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${PROJECT_SOURCE_DIR}/glfw/include/)
 include_directories(${PROJECT_SOURCE_DIR}/glm/)
+include_directories(${PROJECT_SOURCE_DIR}/assimp/include/)
+link_directories(${PROJECT_BINARY_DIR}/assimp/lib/)
+link_directories(${PROJECT_BINARY_DIR}/assimp/contrib/zlib/)
 
 # build binarys
 add_subdirectory(glfw)
@@ -24,6 +27,7 @@ glad_add_library(glad REPRODUCIBLE MX API gl:core=4.3)
 
 
 add_subdirectory(libsrc)
+# add_subdirectory(assimp)
 
 # build executable
 add_executable(firstWindow src/firstWindow.cpp)
