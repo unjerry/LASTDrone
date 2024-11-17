@@ -144,18 +144,20 @@ namespace Game
     {
         if (this->State == GAME_ACTIVE)
         {
-            gl->Disable(GL_DEPTH_TEST);
+            // gl->Disable(GL_DEPTH_TEST);
             // draw background
-            Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio, -1.0f, 0.0f) + glm::vec3(cameraPos, 0.0f), glm::vec2(aspect_ratio * 2.0f, 2.0f), 0.0f);
-            gl->Enable(GL_DEPTH_TEST);
+            Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio*2, -1.0f*2, 0.0f) + glm::vec3(cameraPos, -1.732f), glm::vec2(aspect_ratio * 4.0f, 4.0f), 0.0f);
+            // gl->Enable(GL_DEPTH_TEST);
             // draw player
             Player->Draw(*Renderer);
             // draw level
             this->Levels[this->Level].Draw(*Renderer);
-            gl->Disable(GL_DEPTH_TEST);
-            Particles->Draw();
-            gl->Enable(GL_DEPTH_TEST);
+            // gl->Disable(GL_DEPTH_TEST);
+            // gl->Enable(GL_DEPTH_TEST);
             Ball->Draw(*Renderer);
+            Particles->Draw();
+            // ResourceManager::GetShader("particle").Use();
+            ResourceManager::GetShader("sprite").Use();
         }
     }
     void Game::changeSize(unsigned int width, unsigned int height)

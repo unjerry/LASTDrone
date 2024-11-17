@@ -16,8 +16,8 @@ GameObject::GameObject(glm::vec3 pos, glm::vec2 size, Texture2D sprite, glm::vec
 
 void GameObject::Draw(SpriteRenderer &renderer)
 {
-    for (size_t k = 0; k < 3; k++)
+    for (size_t k = 0; k <= 2; k++)
     {
-        renderer.DrawSprite(this->Sprite, glm::vec3(this->Position.x, this->Position.y, -.05f * k), this->Size, this->Rotation, this->Color);
+        renderer.DrawSprite(this->Sprite, glm::vec3(this->Position.x, this->Position.y, -.05f * (2 - k)), this->Size, this->Rotation, this->Color);
     }
 }

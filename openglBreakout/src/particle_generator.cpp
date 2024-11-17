@@ -8,6 +8,7 @@
 ******************************************************************/
 #include "particle_generator.h"
 #include <iostream>
+#include <map>
 extern GladGLContext *gl;
 
 ParticleGenerator::ParticleGenerator(Shader shader, Texture2D texture, unsigned int amount)
@@ -45,12 +46,19 @@ void ParticleGenerator::Draw()
     gl->BlendFunc(GL_SRC_ALPHA, GL_ONE);
     this->shader.Use();
     // std::cout << "TM " << this->particles[0].Position.x << " " << this->particles[0].Position.y << " " << this->particles[0].Color.g << " " << this->particles[0].Color.r << " " << this->particles[0].Color.a << " " << this->particles[0].Life << std::endl;
+    std::map<float, Particle> sorted;
     for (Particle particle : this->particles)
     {
+        float trans = particle.Color.a;
+        sorted[trans] = particle;
+    }
+    for (std::map<float, Particle>::iterator it = sorted.begin(); it != sorted.end(); ++it)
+    {
+        Particle particle = it->second;
         if (particle.Life > 0.0f)
         {
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(particle.Position, 0)); // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+            model = glm::translate(model, glm::vec3(particle.Position, it->first * 0.0005)); // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
             // gl->PolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             this->shader.SetMatrix4("model", model);
             this->shader.Use().SetVector4f("clrr", particle.Color, true);

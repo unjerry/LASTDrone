@@ -7,9 +7,11 @@
 #include <game.h>
 #include <resource_manager.h>
 #include <learnopengl/filesystem.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
 #include <core/gmWindow.h>
 #include <iostream>
 
@@ -43,6 +45,7 @@ int main(int argc, char *argv[])
     // OpenGL configuration
     // --------------------
     gl->Viewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    gl->Enable(GL_DEPTH_TEST);
     gl->Enable(GL_BLEND);
     gl->BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // // initialize game
@@ -54,14 +57,13 @@ int main(int argc, char *argv[])
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-    std::cout << "sldkfj" << std::endl;
-    Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile("rhd", aiProcess_Triangulate | aiProcess_FlipUVs); // retrieve the directory path of the filepath
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
-        // return 0;
-    }
+    // Assimp::Importer importer;
+    // const aiScene *scene = importer.ReadFile("rhd", aiProcess_Triangulate | aiProcess_FlipUVs); // retrieve the directory path of the filepath
+    // if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    // {
+    //     std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+    //     // return 0;
+    // }
     // directory = path.substr(0, path.find_last_of('/'));
     // process ASSIMP's root node recursively
     // processNode(scene->mRootNode, scene);

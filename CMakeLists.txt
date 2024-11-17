@@ -15,8 +15,10 @@ include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${PROJECT_SOURCE_DIR}/glfw/include/)
 include_directories(${PROJECT_SOURCE_DIR}/glm/)
 include_directories(${PROJECT_SOURCE_DIR}/assimp/include/)
-link_directories(${PROJECT_BINARY_DIR}/assimp/lib/)
-link_directories(${PROJECT_BINARY_DIR}/assimp/contrib/zlib/)
+if(NOT MSVC)
+    link_directories(${PROJECT_SOURCE_DIR}/assimp/lib/)
+    link_directories(${PROJECT_SOURCE_DIR}/assimp/contrib/zlib/)
+endif()
 
 # build binarys
 add_subdirectory(glfw)
@@ -27,7 +29,9 @@ glad_add_library(glad REPRODUCIBLE MX API gl:core=4.3)
 
 
 add_subdirectory(libsrc)
-# add_subdirectory(assimp)
+if(MSVC)
+    add_subdirectory(assimp)
+endif()
 
 # build executable
 add_executable(firstWindow src/firstWindow.cpp)
