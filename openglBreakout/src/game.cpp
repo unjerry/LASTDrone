@@ -9,6 +9,7 @@
 #include <ball_object.h>
 #include <particle_generator.h>
 #include <iostream>
+#include <box2d/box2d.h>
 
 extern GladGLContext *gl;
 
@@ -33,6 +34,10 @@ namespace Game
     }
     void Game::Init()
     {
+        b2WorldDef worldDef = b2DefaultWorldDef();
+        worldDef.gravity = b2Vec2({0.0, -10.0});
+        worldId = b2CreateWorld(&worldDef);
+
         // load shaders
         ResourceManager::LoadShader(FileSystem::getPath("resources/shaders/particle.vs").c_str(), FileSystem::getPath("resources/shaders/particle.fs").c_str(), nullptr, "particle");
         ResourceManager::LoadShader(FileSystem::getPath("resources/shaders/sprite.vs").c_str(), FileSystem::getPath("resources/shaders/sprite.fs").c_str(), nullptr, "sprite");
@@ -53,43 +58,36 @@ namespace Game
         ResourceManager::LoadTexture(FileSystem::getPath("resources/textures/particle.png").c_str(), true, "particle");
         // load levels
         GameLevel one;
-        one.Load(FileSystem::getPath("resources/levels/one.lvl").c_str(), 2.0f, 1.0f);
+        one.Load(FileSystem::getPath("resources/levels/one.lvl").c_str(), 2.0f, 1.0f, worldId);
         GameLevel two;
-        two.Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f);
+        two.Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
         GameLevel three;
-        three.Load(FileSystem::getPath("resources/levels/three.lvl").c_str(), 2.0f, 1.0f);
+        three.Load(FileSystem::getPath("resources/levels/three.lvl").c_str(), 2.0f, 1.0f, worldId);
         GameLevel four;
-        four.Load(FileSystem::getPath("resources/levels/four.lvl").c_str(), 2.0f, 1.0f);
+        four.Load(FileSystem::getPath("resources/levels/four.lvl").c_str(), 2.0f, 1.0f, worldId);
         this->Levels.push_back(one);
         this->Levels.push_back(two);
         this->Levels.push_back(three);
         this->Levels.push_back(four);
         this->Level = 0;
         // configure game objects
-        glm::vec3 playerPos = glm::vec3(0.0, -0.85, 0);
-        Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
+        glm::vec3 playerPos = glm::vec3(-PLAYER_SIZE.x / 2.0f, -0.85, 0);
+        Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"), worldId);
         glm::vec3 ballPos = playerPos + glm::vec3(PLAYER_SIZE.x / 2.0f - BALL_RADIUS,
                                                   +PLAYER_SIZE.y, 0.0f);
-        Ball = new BallObject(ballPos, BALL_RADIUS, INITIAL_BALL_VELOCITY,
+        Ball = new BallObject(ballPos, BALL_RADIUS, worldId, INITIAL_BALL_VELOCITY,
                               ResourceManager::GetTexture("face"));
         Particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("particle"), 500);
     }
     void Game::Update(float dt)
     {
         glm::mat4 view = glm::lookAt(glm::vec3(cameraPos, 1.732f), glm::vec3(cameraPos, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        ResourceManager::GetShader("sprite").SetMatrix4("view", view);
-        // glm::mat4 view = glm::lookAt(glm::vec3(cameraPos, 1.732f), glm::vec3(cameraPos, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 S(1.0f);
-        for (size_t i = 0; i < 3; i++)
-        {
-            S[i][i] = 0.5f;
-        }
-
+        ResourceManager::GetShader("sprite").Use().SetMatrix4("view", view);
         ResourceManager::GetShader("particle").Use().SetMatrix4("view", view);
         Ball->Move(dt, 1.0f);
-        this->DoCollisions();
+        // this->DoCollisions();
         // check loss condition
-        if (Ball->Position.y >= this->Height) // did ball reach bottom edge?
+        if (Ball->Position.y <= -1.0) // did ball reach bottom edge?
         {
             this->ResetLevel();
             this->ResetPlayer();
@@ -107,8 +105,8 @@ namespace Game
                 if (Player->Position.x >= -1.0f)
                 {
                     Player->Position.x -= velocity;
-                    if (Ball->Stuck)
-                        Ball->Position.x -= velocity;
+                    // if (Ball->Stuck)
+                    //     Ball->Position.x -= velocity;
                 }
             }
             if (this->Keys[GLFW_KEY_D])
@@ -116,8 +114,8 @@ namespace Game
                 if (Player->Position.x <= 1.0f - Player->Size.x)
                 {
                     Player->Position.x += velocity;
-                    if (Ball->Stuck)
-                        Ball->Position.x += velocity;
+                    // if (Ball->Stuck)
+                    //     Ball->Position.x += velocity;
                 }
             }
             if (this->Keys[GLFW_KEY_SPACE])
@@ -146,12 +144,12 @@ namespace Game
         {
             // gl->Disable(GL_DEPTH_TEST);
             // draw background
-            Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio*2, -1.0f*2, 0.0f) + glm::vec3(cameraPos, -1.732f), glm::vec2(aspect_ratio * 4.0f, 4.0f), 0.0f);
+            Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio * 2, -1.0f * 2, 0.0f) + glm::vec3(cameraPos, -1.732f), glm::vec2(aspect_ratio * 4.0f, 4.0f), 0.0f);
             // gl->Enable(GL_DEPTH_TEST);
             // draw player
-            Player->Draw(*Renderer);
+            /* Player->Draw(*Renderer); */
             // draw level
-            this->Levels[this->Level].Draw(*Renderer);
+            /* this->Levels[this->Level].Draw(*Renderer); */
             // gl->Disable(GL_DEPTH_TEST);
             // gl->Enable(GL_DEPTH_TEST);
             Ball->Draw(*Renderer);
@@ -172,20 +170,23 @@ namespace Game
     void Game::ResetLevel()
     {
         if (this->Level == 0)
-            this->Levels[0].Load("levels/one.lvl", this->Width, this->Height / 2);
+            this->Levels[0].Load(FileSystem::getPath("resources/levels/one.lvl").c_str(), 2.0f, 1.0f, worldId);
         else if (this->Level == 1)
-            this->Levels[1].Load("levels/two.lvl", this->Width, this->Height / 2);
+            this->Levels[1].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
         else if (this->Level == 2)
-            this->Levels[2].Load("levels/three.lvl", this->Width, this->Height / 2);
+            this->Levels[2].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
         else if (this->Level == 3)
-            this->Levels[3].Load("levels/four.lvl", this->Width, this->Height / 2);
+            this->Levels[3].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
     }
     void Game::ResetPlayer()
     {
+        glm::vec3 playerPos = glm::vec3(-PLAYER_SIZE.x / 2.0f, -0.85, 0);
+        glm::vec3 ballPos = playerPos + glm::vec3(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, +PLAYER_SIZE.y, 0.0f);
+
         // reset player/ball stats
         Player->Size = PLAYER_SIZE;
-        Player->Position = glm::vec3(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y, 0.0);
-        Ball->Reset(Player->Position + glm::vec3(PLAYER_SIZE.x / 2.0f - BALL_RADIUS, PLAYER_SIZE.y, 0.0f), INITIAL_BALL_VELOCITY);
+        Player->Position = playerPos;
+        Ball->Reset(ballPos, INITIAL_BALL_VELOCITY);
     }
     // collision detection
     bool CheckCollision(GameObject &one, GameObject &two);

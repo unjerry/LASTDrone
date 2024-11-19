@@ -15,6 +15,8 @@
 #include "texture.h"
 #include "sprite_renderer.h"
 
+#include <box2d/box2d.h>
+
 // Container object for holding all state relevant for a single
 // game object entity. Each object in the game likely needs the
 // minimal of state as described within GameObject.
@@ -29,9 +31,11 @@ public:
     bool Destroyed;
     // render state
     Texture2D Sprite;
+    b2WorldId wdid;
+    b2BodyId bodyId;
     // constructor(s)
     GameObject();
-    GameObject(glm::vec3 pos, glm::vec2 size, Texture2D sprite, glm::vec3 color = glm::vec3(1.0f), glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
+    GameObject(glm::vec3 pos, glm::vec2 size, Texture2D sprite, b2WorldId, glm::vec3 color = glm::vec3(1.0f), glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
     // draw sprite
     virtual void Draw(SpriteRenderer &renderer);
 };

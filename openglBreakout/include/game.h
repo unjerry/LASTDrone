@@ -8,6 +8,8 @@
 #include <GLFW/glfw3.h>
 
 #include "game_level.h"
+
+#include <box2d/box2d.h>
 namespace Game
 {
     // Represents the current state of the game
@@ -41,6 +43,7 @@ namespace Game
     class Game
     {
     public:
+        b2WorldId worldId;
         // game state
         GameState State;
         bool Keys[1024];

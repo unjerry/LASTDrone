@@ -11,8 +11,9 @@
 #include <fstream>
 #include <sstream>
 
-void GameLevel::Load(const char *file, float levelWidth, float levelHeight)
+void GameLevel::Load(const char *file, float levelWidth, float levelHeight, b2WorldId wrdid)
 {
+    this->wdid = wrdid;
     // clear old data
     this->Bricks.clear();
     // load from file
@@ -70,7 +71,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, float leve
                 for (size_t k = 0; k < 1; k++)
                 {
                     glm::vec3 pos(aspect + unit_width * x, levelHeight - unit_height * (y + 1), -.05f * k);
-                    GameObject obj(pos, size, ResourceManager::GetTexture("block_solid"), glm::vec3(0.8f, 0.8f, 0.7f));
+                    GameObject obj(pos, size, ResourceManager::GetTexture("block_solid"), wdid, glm::vec3(0.8f, 0.8f, 0.7f));
                     obj.IsSolid = true;
                     this->Bricks.push_back(obj);
                 }
@@ -91,7 +92,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, float leve
                 for (size_t k = 0; k < 1; k++)
                 {
                     glm::vec3 pos(aspect + unit_width * x, levelHeight - unit_height * (y + 1), -.05f * k);
-                    this->Bricks.push_back(GameObject(pos, size, ResourceManager::GetTexture("block"), color));
+                    this->Bricks.push_back(GameObject(pos, size, ResourceManager::GetTexture("block"), wdid, color));
                 }
             }
         }

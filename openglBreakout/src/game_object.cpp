@@ -8,11 +8,21 @@
 ******************************************************************/
 #include "game_object.h"
 
-GameObject::GameObject()
-    : Position(0.0f, 0.0f, 0.0f), Size(1.0f, 1.0f), Velocity(0.0f), Color(1.0f), Rotation(0.0f), Sprite(), IsSolid(false), Destroyed(false) {}
+GameObject::GameObject() : Position(0.0f, 0.0f, 0.0f), Size(1.0f, 1.0f), Velocity(0.0f), Color(1.0f), Rotation(0.0f), Sprite(), IsSolid(false), Destroyed(false) {}
 
-GameObject::GameObject(glm::vec3 pos, glm::vec2 size, Texture2D sprite, glm::vec3 color, glm::vec2 velocity)
-    : Position(pos), Size(size), Velocity(velocity), Color(color), Rotation(0.0f), Sprite(sprite), IsSolid(false), Destroyed(false) {}
+GameObject::GameObject(glm::vec3 pos, glm::vec2 size, Texture2D sprite, b2WorldId worldid, glm::vec3 color, glm::vec2 velocity) : Position(pos), Size(size), Velocity(velocity), Color(color), Rotation(0.0f), Sprite(sprite), IsSolid(false), Destroyed(false), wdid(worldid)
+{
+    b2BodyDef bodyDef = b2DefaultBodyDef();
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position = b2Vec2({pos.x, pos.y});
+    bodyId = b2CreateBody(wdid, &bodyDef);
+
+    b2Polygon dynamicBox = b2MakeBox(1.0f, 1.0f);
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+    shapeDef.density = 1.0f;
+    shapeDef.friction = 0.3f;
+    b2CreatePolygonShape(bodyId, &shapeDef, &dynamicBox);
+}
 
 void GameObject::Draw(SpriteRenderer &renderer)
 {

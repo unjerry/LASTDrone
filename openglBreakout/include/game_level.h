@@ -17,6 +17,8 @@
 #include "sprite_renderer.h"
 #include "resource_manager.h"
 
+#include <box2d/box2d.h>
+
 /// GameLevel holds all Tiles as part of a Breakout level and
 /// hosts functionality to Load/render levels from the harddisk.
 class GameLevel
@@ -27,11 +29,12 @@ public:
     // constructor
     GameLevel() {}
     // loads level from file
-    void Load(const char *file, float levelWidth, float levelHeight);
+    void Load(const char *file, float levelWidth, float levelHeight,b2WorldId);
     // render level
     void Draw(SpriteRenderer &renderer);
     // check if the level is completed (all non-solid tiles are destroyed)
     bool IsCompleted();
+    b2WorldId wdid;
 
 private:
     // initialize level from tile data
