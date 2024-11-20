@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // IF using Docking Branch
-
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
@@ -81,6 +81,10 @@ int main(int argc, char *argv[])
     // directory = path.substr(0, path.find_last_of('/'));
     // process ASSIMP's root node recursively
     // processNode(scene->mRootNode, scene);
+    char buf[100] = {0};
+    float f = 1;
+    bool my_tool_active = true;
+    float my_color[4] = {0};
 
     while (!glfwWindowShouldClose(window))
     {
@@ -96,8 +100,21 @@ int main(int argc, char *argv[])
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow(); // Show demo window! :)
-        // manage user input
+        // Create a window called "My First Tool", with a menu bar.
+        if (my_tool_active)
+        {
+            ImGui::Begin("My First Tool");
+            ImGui::Text("Hello, world %d", 123);
+            if (ImGui::Button("Save"))
+            {
+                std::cout << buf << std::endl;
+                std::cout << f << std::endl;
+            }
+            ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+            ImGui::SliderFloat("float", &f, 0.0f, 1.0f); // manage user input
+            ImGui::End();
+        }
+
         // -----------------
         Breakout.ProcessInput(deltaTime);
         // update game state
@@ -114,6 +131,14 @@ int main(int argc, char *argv[])
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         // (Your code calls glfwSwapBuffers() etc.)
         glfwSwapBuffers(window);
+        // Update and Render additional Platform Windows
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            // TODO for OpenGL: restore current GL context.
+            glfwMakeContextCurrent(window);
+        }
     }
 
     // delete all resources as loaded using the resource manager
