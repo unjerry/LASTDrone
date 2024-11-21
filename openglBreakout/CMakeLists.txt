@@ -20,5 +20,5 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src SRCDIR)
 add_executable(gameBreakout "program.cpp" ${SRCDIR} ${backendd})
 target_link_libraries(gameBreakout glad glfw gmWindow box2d gameBreakimgui)# assimp zlibstatic)
 
-add_executable(b2Test "b2Test.cpp")
-target_link_libraries(b2Test glad glfw box2d)
+add_executable(b2Test "b2Test.cpp" ${SRCDIR} ${backendd})
+target_link_libraries(b2Test glad glfw box2d gmWindow gameBreakimgui)
