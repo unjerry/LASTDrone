@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     {
         // calculate delta time
         // --------------------
-        float currentFrame = glfwGetTime();
+        float currentFrame = (float)glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();

@@ -11,6 +11,8 @@
 #include <iostream>
 #include <box2d/box2d.h>
 
+#include <imgui.h>
+
 extern GladGLContext *gl;
 
 // Game-related State data
@@ -85,7 +87,7 @@ namespace Game
         ResourceManager::GetShader("sprite").Use().SetMatrix4("view", view);
         ResourceManager::GetShader("particle").Use().SetMatrix4("view", view);
         Ball->Move(dt, 1.0f);
-        // this->DoCollisions();
+        this->DoCollisions();
         // check loss condition
         if (Ball->Position.y <= -1.0) // did ball reach bottom edge?
         {
@@ -138,6 +140,7 @@ namespace Game
             }
         }
     }
+    int t = 1;
     void Game::Render()
     {
         if (this->State == GAME_ACTIVE)
@@ -147,15 +150,29 @@ namespace Game
             Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec3(-aspect_ratio * 2, -1.0f * 2, 0.0f) + glm::vec3(cameraPos, -1.732f), glm::vec2(aspect_ratio * 4.0f, 4.0f), 0.0f);
             // gl->Enable(GL_DEPTH_TEST);
             // draw player
-            /* Player->Draw(*Renderer); */
+            Player->Draw(*Renderer);
             // draw level
-            /* this->Levels[this->Level].Draw(*Renderer); */
+            this->Levels[this->Level].Draw(*Renderer);
             // gl->Disable(GL_DEPTH_TEST);
             // gl->Enable(GL_DEPTH_TEST);
             Ball->Draw(*Renderer);
             Particles->Draw();
             // ResourceManager::GetShader("particle").Use();
             ResourceManager::GetShader("sprite").Use();
+
+            ImGui::Begin("BreakOut Menue");
+            ImGui::Text("Hello, world %d", 123);
+            if (ImGui::Button("Save"))
+            {
+                if (0 <= t && t <= 3)
+                {
+                    Level = t;
+                }
+                ResetLevel();
+                ResetPlayer();
+            }
+            ImGui::InputInt("int", &t, 1);
+            ImGui::End();
         }
     }
     void Game::changeSize(unsigned int width, unsigned int height)
@@ -174,9 +191,9 @@ namespace Game
         else if (this->Level == 1)
             this->Levels[1].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
         else if (this->Level == 2)
-            this->Levels[2].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
+            this->Levels[2].Load(FileSystem::getPath("resources/levels/three.lvl").c_str(), 2.0f, 1.0f, worldId);
         else if (this->Level == 3)
-            this->Levels[3].Load(FileSystem::getPath("resources/levels/two.lvl").c_str(), 2.0f, 1.0f, worldId);
+            this->Levels[3].Load(FileSystem::getPath("resources/levels/four.lvl").c_str(), 2.0f, 1.0f, worldId);
     }
     void Game::ResetPlayer()
     {
