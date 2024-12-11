@@ -22,27 +22,8 @@ public:
         size_t slen = s.length();
         size_t ans_start = 0;
         size_t max_length = 1;
-        bool T[2][slen] = {false};
         const char *cs = s.c_str();
-        for (size_t i = 0; i < slen; i++)
-        {
-            for (size_t j = 1; i >= j && i + j < slen; j++)
-            {
-                if (cs[i - j] == cs[i + j])
-                {
-                    if (j * 2 + 1 > max_length && i == j)
-                    {
-                        max_length = j * 2 + 1;
-                        ans_start = i - j;
-                    }
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        for (size_t i = 0; i + 1 < slen; i++)
+        for (ssize_t i = (slen - 1) / 2; i >= 0; i--)
         {
             for (size_t j = 0; i >= j && i + j + 1 < slen; j++)
             {
@@ -52,6 +33,23 @@ public:
                     {
                         ans_start = i - j;
                         max_length = (j + 1) * 2;
+                        return make_pair(ans_start, max_length);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (size_t j = 1; i >= j && i + j < slen; j++)
+            {
+                if (cs[i - j] == cs[i + j])
+                {
+                    if (j * 2 + 1 > max_length && i == j)
+                    {
+                        max_length = j * 2 + 1;
+                        ans_start = i - j;
+                        return make_pair(ans_start, max_length);
                     }
                 }
                 else

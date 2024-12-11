@@ -1,13 +1,17 @@
 #include <iostream>
-// #include <5.LongestPalindromicSubstring.cpp>
-#include <214.Shortest Palindrome.cpp>
-
+#include <22.GenerateParentheses.h>
+#include <32.LongestValidParentheses.h>
 using namespace std;
 
 int main()
 {
-    Solution S;
-    cout << "hello world" << endl;
-    cout << S.shortestPalindrome("") << endl;
+    cout << "GenerateParentheses" << endl;
+    for (auto &x : GenerateParentheses::S.generateParenthesis(2))
+    {
+        cout << x << endl;
+    }
+
+    cout << "LongestValidParentheses" << endl;
+    cout << LongestValidParentheses::S.longestValidParentheses(")()())") << endl;
     return 0;
 }
